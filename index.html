@@ -403,10 +403,10 @@
   <div class="overlay"></div>
 
   <!-- Audio -->
-  <audio id="bg-music" loop autoplay>
-    <source src="tujh_bin.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+  <audio id="bg-music" loop muted>
+   <source src="tujh_bin.mp3" type="audio/mpeg">
+   Your browser does not support the audio element.
+ </audio>
 
   <!-- Navbar -->
   <div class="navbar">
@@ -449,46 +449,102 @@
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
-    window.onload = function() {
-      var audio = document.getElementById("bg-music");
-      audio.play().catch(function(error) {
-        console.log("Audio play failed: " + error);
-      });
-    };
-    const lines = document.querySelectorAll('.poem p');
-    lines.forEach((line, i) => {
-      setTimeout(() => {
-        line.style.opacity = 1;
-        line.style.transform = 'translateY(0)';
-      }, i * 1000);
-    });
+   
+   const lines = document.querySelectorAll('.poem p');
+   let animationsFinished = false;
+ 
+   lines.forEach((line, i) => {
+     setTimeout(() => {
+       line.style.opacity = 1;
+       line.style.transform = 'translateY(0)';
+       if (i === lines.length - 1) {
+         // All animations completed
+         animationsFinished = true;
+       }
+     }, i * 750); // Adjust speed as needed
+   });
 
     function toggleDarkMode() {
       document.body.classList.toggle('dark');
     }
 
+    
+    // Download content as PDF
     function downloadPDF() {
       const element = document.querySelector('.content-wrapper');
-      const opt = {
-        margin: 0.3,
-        filename: 'EkPalKaKhwaab.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    
+      const waitForAnimations = () => {
+        return new Promise(resolve => {
+          if (animationsFinished) return resolve();
+          const checkInterval = setInterval(() => {
+            if (animationsFinished) {
+              clearInterval(checkInterval);
+              resolve();
+            }
+          }, 200);
+        });
       };
-      html2pdf().set(opt).from(element).save();
+    
+      const scaleDown = () => {
+        const originalTransform = element.style.transform;
+        element.style.transform = 'scale(0.7)';
+        element.style.transformOrigin = 'top left';
+        return originalTransform;
+      };
+    
+      const restoreScale = (originalTransform) => {
+        element.style.transform = originalTransform || '';
+      };
+    
+      waitForAnimations().then(() => {
+        const originalTransform = scaleDown();
+    
+        const opt = {
+          margin: 0,
+          filename: 'EkPalKaKhwaab.pdf',
+          image: { type: 'jpeg', quality: 1 },
+          html2canvas: {
+            scale: 4,
+            scrollY: 0,
+            useCORS: true
+          },
+          jsPDF: {
+            unit: 'px',
+            format: [1200, 1600],
+            orientation: 'portrait'
+          }
+        };
+    
+        html2pdf().set(opt).from(element).save().then(() => {
+          restoreScale(originalTransform);
+        });
+      });
     }
+     // Toggle the music on and off
+      let audioElement = document.getElementById('bg-music');
 
-    let audioPlaying = true;
-    function toggleMusic() {
-      const audio = document.getElementById('bg-music');
-      if (audioPlaying) {
-        audio.pause();
-      } else {
-        audio.play();
-      }
-      audioPlaying = !audioPlaying;
+  // Function to play the music
+  function playMusic() {
+    if (audioElement.paused) {
+      audioElement.play().then(() => {
+        audioElement.muted = false; // Unmute after play starts
+      }).catch(error => {
+        console.log("Error playing the audio: ", error);
+      });
     }
+  }
+
+  // Trigger audio on any user interaction (click anywhere on the page)
+  window.addEventListener('click', playMusic);
+
+  // Toggle music on and off when the user clicks a button or somewhere else
+  function toggleMusic() {
+    if (audioElement.paused) {
+      playMusic();
+    } else {
+      audioElement.pause();
+    }
+  }
   </script>
 </body>
 </html>
