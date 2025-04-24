@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ek Pal Ka Khwaab</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: rgb(0, 0, 0);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: #b7b7b7;
+      animation: gradientAnimation 15s ease infinite;
+    }
+
+    @keyframes gradientAnimation {
+      0%   { background: #a1ffce; }   /* mint green */
+      25%  { background: #faffd1; }   /* lemon yellow */
+      50%  { background: #b8e1fc; }   /* sky mist */
+      75%  { background: #c2ffd8; }   /* aloe green */
+      100% { background: #d4fc79; }   /* citrus light */
+    }
+    
+    /* Falling Stars Effect */
+    .falling-stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      animation: fallingStars 1.5s infinite linear;
+    }
+
+    @keyframes fallingStars {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    .star {
+      position: absolute;
+      width: 18px;
+      height: 30px;
+      background-color: rgb(15, 236, 239);
+      border-radius: 50%;
+      animation: starFall 2s infinite linear;
+    }
+
+    @keyframes starFall {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) scale(0.8);
+        opacity: 0.5;
+      }
+    }
+
+    /* Glowing Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: particlesAnimation 2s infinite ease-in-out;
+    }
+
+    @keyframes particlesAnimation {
+      0% {
+        transform: translateX(0) translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(calc(100vw)) translateY(calc(100vh));
+        opacity: 0;
+      }
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+    }
+
+    .navbar .brand {
+      font-size: 1.7rem;
+      font-weight: bold;
+      color: #00ffe7;
+      text-shadow: 0 0 10px #00ffe7;
+    }
+
+    .btn-group button {
+      background: #14d8d1;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-left: 12px;
+      font-size: 1.1em;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(20, 216, 209, 0.5);
+    }
+
+    .btn-group button:hover {
+      background: #10b3aa;
+      transform: translateY(-2px);
+    }
+
+    .content-wrapper {
+      padding: 100px 20px 50px;
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 100px);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 30px;
+      color: #14d8d1;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .poem {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(12px);
+      text-align: center;
+      font-size: 1.75rem;
+      line-height: 1.8;
+      color: #f7f7f7;
+      width: 100%;
+    }
+
+    .poem p {
+      margin-bottom: 18px;
+      white-space: pre-line;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+
+    
+    .moon {
+      font-size: 5em;
+      margin-top: 25px;
+      color: #f1c40f;
+      animation: pulse 2s infinite;
+    }
+
+    .attribution {
+      margin-top: 15px;
+      font-size: 1.2rem;
+      color: aqua;
+      font-style: italic;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .dark .poem {
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .dark body {
+      background-color: #111;
+      color: #eee;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .poem {
+        font-size: 1rem;
+        padding: 16px;
+      }
+
+      .moon {
+        font-size: 3.5em;
+      }
+
+      .attribution {
+        font-size: 1rem;
+      }
+
+      .btn-group button {
+        padding: 8px 10px;
+        font-size: 1em;
+      }
+
+      .navbar .brand {
+        font-size: 1.3rem;
+      }
+    }
+
+    /*sjbfdsbvdb*/
+    /* Main container */
+.background-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Wave styles */
+.wave {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  bottom: 0;
+}
+
+.wave1 {
+  animation: waveAnim1 10s ease-in-out infinite alternate;
+}
+.wave2 {
+  animation: waveAnim2 15s ease-in-out infinite alternate;
+}
+.wave3 {
+  animation: waveAnim3 20s ease-in-out infinite alternate;
+}
+
+@keyframes waveAnim1 {
+  0% { transform: translateY(0) scaleX(1); }
+  50% { transform: translateY(10px) scaleX(1.02); }
+  100% { transform: translateY(0) scaleX(1); }
+}
+@keyframes waveAnim2 {
+  0% { transform: translateY(0) scaleX(1); }
+  50% { transform: translateY(20px) scaleX(1.03); }
+  100% { transform: translateY(0) scaleX(1); }
+}
+@keyframes waveAnim3 {
+  0% { transform: translateY(0) scaleX(1); }
+  50% { transform: translateY(30px) scaleX(1.04); }
+  100% { transform: translateY(0) scaleX(1); }
+}
+
+/* Cloud styles */
+.cloud {
+  position: absolute;
+  background: rgba(8, 2, 26, 0.932);
+  border-radius: 50%;
+  filter: blur(10px);
+  opacity: 0.8;
+  z-index: 2;
+  animation: cloudFloat 80s linear infinite;
+}
+
+.cloud1 {
+  top: 5%;
+  left: -200px;
+  width: 220px;
+  height: 70px;
+  animation-delay: 0s;
+}
+.cloud2 {
+  top: 15%;
+  left: -250px;
+  width: 180px;
+  height: 60px;
+  animation-delay: 10s;
+}
+.cloud3 {
+  top: 25%;
+  left: -300px;
+  width: 200px;
+  height: 65px;
+  animation-delay: 20s;
+}
+.cloud4 {
+  top: 35%;
+  left: -350px;
+  width: 160px;
+  height: 55px;
+  animation-delay: 30s;
+}
+.cloud5 {
+  top: 10%;
+  left: -400px;
+  width: 240px;
+  height: 80px;
+  animation-delay: 40s;
+}
+.cloud6 {
+  top: 20%;
+  left: -450px;
+  width: 200px;
+  height: 70px;
+  animation-delay: 50s;
+}
+
+@keyframes cloudFloat {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(200vw); }
+}
+
+/* Optional: background color for better contrast */
+
+
+
+    
+  </style>
+</head>
+<body>
+  <div class="background-effects">
+    <!-- Waves -->
+    <svg class="wave wave1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path fill="#6e44ff" fill-opacity="0.4" d="M0,160L40,176C80,192,160,224,240,234.7C320,245,400,235,480,202.7C560,171,640,117,720,122.7C800,128,880,192,960,213.3C1040,235,1120,213,1200,181.3C1280,149,1360,107,1400,85.3L1440,64L1440,320L0,320Z"></path>
+    </svg>
+    <svg class="wave wave2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path fill="#6e44ff" fill-opacity="0.2" d="M0,224L60,229.3C120,235,240,245,360,240C480,235,600,213,720,208C840,203,960,213,1080,197.3C1200,181,1320,139,1380,117.3L1440,96L1440,320L0,320Z"></path>
+    </svg>
+    <svg class="wave wave3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path fill="#20cef0" fill-opacity="0.1" d="M0,288L80,272C160,256,320,224,480,192C640,160,800,128,960,133.3C1120,139,1280,181,1360,202.7L1440,224L1440,320L0,320Z"></path>
+    </svg>
+  
+    <!-- Clouds -->
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+    <div class="cloud cloud4"></div>
+    <div class="cloud cloud5"></div>
+    <div class="cloud cloud6"></div>
+    <div class="cloud cloud6"></div>
+  </div>
+  
+  <!-- Falling stars and particles -->
+  <div class="falling-stars">
+    <div class="star" style="left: 10%; animation-duration: 2s;"></div>
+    <div class="star" style="left: 30%; animation-duration: 1.8s;"></div>
+    <div class="star" style="left: 50%; animation-duration: 2.2s;"></div>
+    <div class="star" style="left: 70%; animation-duration: 2.5s;"></div>
+    <div class="star" style="left: 90%; animation-duration: 2s;"></div>
+  </div>
+  <div class="particles">
+    <div class="particle" style="top: 20%; left: 30%; animation-duration: 1.5s;"></div>
+    <div class="particle" style="top: 50%; left: 50%; animation-duration: 2.2s;"></div>
+    <div class="particle" style="top: 70%; left: 70%; animation-duration: 1.7s;"></div>
+    <div class="particle" style="top: 90%; left: 40%; animation-duration: 1.8s;"></div>
+    <div class="particle" style="top: 30%; left: 80%; animation-duration: 2s;"></div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Audio -->
+  <audio id="bg-music" loop autoplay>
+    <source src="tujh_bin.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="brand">Ek Pal Ka Khwaab</div>
+    <div class="btn-group">
+      <button onclick="toggleDarkMode()">🌓</button>
+      <button onclick="downloadPDF()">📄</button>
+      <button onclick="toggleMusic()">🔊</button>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="content-wrapper">
+    <h1>Ek Pal Ka Khwaab</h1>
+    <div class="poem" id="poem">
+      <p style="color: #ff6347;">Thanda tha mausam, halki thi baarish,</p>
+      <p style="color: #ff1493;">Dil mein thi khamoshi, aankhon mein khwahish.</p>
+      <p style="color: #32cd32;">Uske haathon ka tha jo ehsaas,</p>
+      <p style="color: #1e90ff;">Lagta tha jaise ruk gaya ho har saans.</p>
+      <p style="color: #ff4500;">Chand kadam saath chalte gaye,</p>
+      <p style="color: #29fcdc;">Bin kuch kahe sab keh gaye.</p>
+      <p style="color: #f0e68c;">Na thi zarurat kisi alfaaz ki,</p>
+      <p style="color: #ff1493;">Har lamha tha khud mein raaz ki.</p>
+      <p style="color: #ff6347;">Uski baaton mein tha narm sa geet,</p>
+      <p style="color: #32cd32;">Jaise dard bhi mehka ho kisi meet ki preet.</p>
+      <p style="color: #1e90ff;">Nazaron ne kaha tha jo lab keh na sake,</p>
+      <p style="color: #ff4500;">Waqt bhi ruk gaya tha, us pal ke liye.</p>
+      <p style="color: #29fcdc;">Phir hawaon ne ek kahani likhi,</p>
+      <p style="color: #f0e68c;">Uski muskurahat ne khushboo bikheri.</p>
+      <p style="color: #ff6347;">Har pal tha jaise koi geet adhura,</p>
+      <p style="color: #32cd32;">Jise poora karne ko dil tha beqaraar pura.</p>
+      <p style="color: #ff1493;">Phir achanak ek jhilmil sa noor gaya,</p>
+      <p style="color: #ff4500;">Neend tooti… aur sab kuch door gaya.</p>
+      <p style="color: #1e90ff;">Aankh khuli, to sirf yaad thi saath,</p>
+      <p style="color: #29fcdc;">Wo ek pal ka, ek pyaara sa khwaab tha.</p>
+    </div>
+    <div class="attribution">Written by: Amrit</div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    const lines = document.querySelectorAll('.poem p');
+    lines.forEach((line, i) => {
+      setTimeout(() => {
+        line.style.opacity = 1;
+        line.style.transform = 'translateY(0)';
+      }, i * 1000);
+    });
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+    }
+
+    function downloadPDF() {
+      const element = document.querySelector('.content-wrapper');
+      const opt = {
+        margin: 0.3,
+        filename: 'EkPalKaKhwaab.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+
+    let audioPlaying = true;
+    function toggleMusic() {
+      const audio = document.getElementById('bg-music');
+      if (audioPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+      audioPlaying = !audioPlaying;
+    }
+  </script>
+</body>
+</html>
