@@ -449,6 +449,12 @@
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
+    window.onload = function() {
+      var audio = document.getElementById("bg-music");
+      audio.play().catch(function(error) {
+        console.log("Audio play failed: " + error);
+      });
+    };
     const lines = document.querySelectorAll('.poem p');
     lines.forEach((line, i) => {
       setTimeout(() => {
